@@ -32,8 +32,8 @@ func (h ed25519Alg) Sign(payload []byte) ([]byte, error) {
 	return ed25519.Sign(h.privateKey, payload), nil
 }
 
-func (h ed25519Alg) Verify(expected, payload []byte) error {
-	if !ed25519.Verify(h.publicKey, payload, expected) {
+func (h ed25519Alg) Verify(payload, signature []byte) error {
+	if !ed25519.Verify(h.publicKey, payload, signature) {
 		return ErrInvalidSignature
 	}
 	return nil
