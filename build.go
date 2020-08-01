@@ -32,7 +32,7 @@ func NewBuilder(signer Signer) *Builder {
 	b := &Builder{
 		signer: signer,
 		header: Header{
-			Algorithm: signer.Algorithm(),
+			Algorithm: signer.AlgorithmName(),
 			Type:      "JWT",
 		},
 	}

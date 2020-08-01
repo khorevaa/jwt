@@ -3,9 +3,9 @@ package jwt
 import "testing"
 
 func TestSignerAlg(t *testing.T) {
-	f := func(s Signer, want Algorithm) {
+	f := func(s Signer, want AlgorithmName) {
 		t.Helper()
-		if alg := s.Algorithm(); alg != want {
+		if alg := s.AlgorithmName(); alg != want {
 			t.Errorf("got %#v, want %#v", alg, want)
 		}
 	}
@@ -31,9 +31,9 @@ func TestSignerAlg(t *testing.T) {
 }
 
 func TestVerifierAlg(t *testing.T) {
-	f := func(v Verifier, want Algorithm) {
+	f := func(v Verifier, want AlgorithmName) {
 		t.Helper()
-		if alg := v.Algorithm(); alg != want {
+		if alg := v.AlgorithmName(); alg != want {
 			t.Errorf("got %#v, want %#v", alg, want)
 		}
 	}

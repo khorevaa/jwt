@@ -18,14 +18,14 @@ func Example_BuildSimple() {
 	token, err := builder.Build(claims)
 	checkErr(err)
 
-	fmt.Printf("Algorithm %v\n", token.Header().Algorithm)
+	fmt.Printf("AlgorithmName %v\n", token.Header().Algorithm)
 	fmt.Printf("Type      %v\n", token.Header().Type)
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Raw()))
 
 	// Output:
-	// Algorithm HS256
+	// AlgorithmName HS256
 	// Type      JWT
 	// Claims    {"jti":"random-unique-string","aud":"admin"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0

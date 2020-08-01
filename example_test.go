@@ -54,14 +54,14 @@ func Example_JWT() {
 	var _ bool = newClaims.IsForAudience("admin")
 	var _ bool = newClaims.IsValidAt(time.Now())
 
-	fmt.Printf("Algorithm %v\n", newToken.Header().Algorithm)
+	fmt.Printf("AlgorithmName %v\n", newToken.Header().Algorithm)
 	fmt.Printf("Type      %v\n", newToken.Header().Type)
 	fmt.Printf("Claims    %v\n", string(newToken.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(newToken.Payload()))
 	fmt.Printf("Token     %v\n", string(newToken.Raw()))
 
 	// Output:
-	// Algorithm HS256
+	// AlgorithmName HS256
 	// Type      JWT
 	// Claims    {"jti":"random-unique-string","aud":"admin"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0

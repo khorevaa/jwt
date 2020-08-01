@@ -36,7 +36,7 @@ func BenchmarkAlgEDSA(b *testing.B) {
 }
 
 func BenchmarkAlgES(b *testing.B) {
-	esAlgos := map[jwt.Algorithm]elliptic.Curve{
+	esAlgos := map[jwt.AlgorithmName]elliptic.Curve{
 		jwt.ES256: elliptic.P256(),
 		jwt.ES384: elliptic.P384(),
 		jwt.ES512: elliptic.P521(),
@@ -65,7 +65,7 @@ func BenchmarkAlgES(b *testing.B) {
 }
 
 func BenchmarkAlgPS(b *testing.B) {
-	psAlgos := []jwt.Algorithm{jwt.PS256, jwt.PS384, jwt.PS512}
+	psAlgos := []jwt.AlgorithmName{jwt.PS256, jwt.PS384, jwt.PS512}
 	for _, algo := range psAlgos {
 		key, keyErr := rsa.GenerateKey(rand.Reader, 2048)
 		if keyErr != nil {
@@ -90,7 +90,7 @@ func BenchmarkAlgPS(b *testing.B) {
 }
 
 func BenchmarkAlgRS(b *testing.B) {
-	rsAlgos := []jwt.Algorithm{jwt.RS256, jwt.RS384, jwt.RS512}
+	rsAlgos := []jwt.AlgorithmName{jwt.RS256, jwt.RS384, jwt.RS512}
 	for _, algo := range rsAlgos {
 		key, keyErr := rsa.GenerateKey(rand.Reader, 2048)
 		if keyErr != nil {
@@ -116,7 +116,7 @@ func BenchmarkAlgRS(b *testing.B) {
 
 func BenchmarkAlgHS(b *testing.B) {
 	key := []byte("12345")
-	hsAlgos := []jwt.Algorithm{jwt.HS256, jwt.HS384, jwt.HS512}
+	hsAlgos := []jwt.AlgorithmName{jwt.HS256, jwt.HS384, jwt.HS512}
 	for _, algo := range hsAlgos {
 		signer, signerErr := jwt.NewSignerHS(algo, key)
 		if signerErr != nil {

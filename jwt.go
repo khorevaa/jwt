@@ -61,9 +61,9 @@ func (t *Token) Signature() []byte {
 // See: https://tools.ietf.org/html/rfc7519#section-5
 //
 type Header struct {
-	Algorithm   Algorithm `json:"alg"`
-	Type        string    `json:"typ,omitempty"` // only "JWT" can be here
-	ContentType string    `json:"cty,omitempty"`
+	Algorithm   AlgorithmName `json:"alg"`
+	Type        string        `json:"typ,omitempty"` // only "JWT" can be here
+	ContentType string        `json:"cty,omitempty"`
 }
 
 // MarshalJSON implements the json.Marshaler interface.

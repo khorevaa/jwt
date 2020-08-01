@@ -12,14 +12,14 @@ func Example_Parse() {
 	token, err := jwt.Parse([]byte(t))
 	checkErr(err)
 
-	fmt.Printf("Algorithm %v\n", token.Header().Algorithm)
+	fmt.Printf("AlgorithmName %v\n", token.Header().Algorithm)
 	fmt.Printf("Type      %v\n", token.Header().Type)
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Raw()))
 
 	// Output:
-	// Algorithm HS256
+	// AlgorithmName HS256
 	// Type      JWT
 	// Claims    {"aud":"admin","jti":"random-unique-string"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhZG1pbiIsImp0aSI6InJhbmRvbS11bmlxdWUtc3RyaW5nIn0
@@ -35,14 +35,14 @@ func Example_ParseAndVerify() {
 	token, err := jwt.ParseAndVerify([]byte(t), verifier)
 	checkErr(err)
 
-	fmt.Printf("Algorithm %v\n", token.Header().Algorithm)
+	fmt.Printf("AlgorithmName %v\n", token.Header().Algorithm)
 	fmt.Printf("Type      %v\n", token.Header().Type)
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Raw()))
 
 	// Output:
-	// Algorithm HS256
+	// AlgorithmName HS256
 	// Type      JWT
 	// Claims    {"aud":"admin","jti":"random-unique-string"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhZG1pbiIsImp0aSI6InJhbmRvbS11bmlxdWUtc3RyaW5nIn0

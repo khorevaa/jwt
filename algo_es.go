@@ -8,7 +8,7 @@ import (
 )
 
 // NewSignerES returns a new ECDSA-based signer.
-func NewSignerES(alg Algorithm, key *ecdsa.PrivateKey) (Signer, error) {
+func NewSignerES(alg AlgorithmName, key *ecdsa.PrivateKey) (Signer, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -26,7 +26,7 @@ func NewSignerES(alg Algorithm, key *ecdsa.PrivateKey) (Signer, error) {
 }
 
 // NewVerifierES returns a new ECDSA-based verifier.
-func NewVerifierES(alg Algorithm, key *ecdsa.PublicKey) (Verifier, error) {
+func NewVerifierES(alg AlgorithmName, key *ecdsa.PublicKey) (Verifier, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -43,7 +43,7 @@ func NewVerifierES(alg Algorithm, key *ecdsa.PublicKey) (Verifier, error) {
 	}, nil
 }
 
-func getParamsES(alg Algorithm) (crypto.Hash, int, int, error) {
+func getParamsES(alg AlgorithmName) (crypto.Hash, int, int, error) {
 	switch alg {
 	case ES256:
 		return crypto.SHA256, 32, 256, nil
@@ -57,7 +57,7 @@ func getParamsES(alg Algorithm) (crypto.Hash, int, int, error) {
 }
 
 type esAlg struct {
-	alg        Algorithm
+	alg        AlgorithmName
 	hash       crypto.Hash
 	publickey  *ecdsa.PublicKey
 	privateKey *ecdsa.PrivateKey
@@ -65,7 +65,7 @@ type esAlg struct {
 	curveBits  int
 }
 
-func (h esAlg) Algorithm() Algorithm {
+func (h esAlg) AlgorithmName() AlgorithmName {
 	return h.alg
 }
 

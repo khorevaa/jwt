@@ -7,7 +7,7 @@ import (
 )
 
 // NewSignerPS returns a new RSA-PSS-based signer.
-func NewSignerPS(alg Algorithm, key *rsa.PrivateKey) (Signer, error) {
+func NewSignerPS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -24,7 +24,7 @@ func NewSignerPS(alg Algorithm, key *rsa.PrivateKey) (Signer, error) {
 }
 
 // NewVerifierPS returns a new RSA-PSS-based signer.
-func NewVerifierPS(alg Algorithm, key *rsa.PublicKey) (Verifier, error) {
+func NewVerifierPS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -40,7 +40,7 @@ func NewVerifierPS(alg Algorithm, key *rsa.PublicKey) (Verifier, error) {
 	}, nil
 }
 
-func getParamsPS(alg Algorithm) (crypto.Hash, *rsa.PSSOptions, error) {
+func getParamsPS(alg AlgorithmName) (crypto.Hash, *rsa.PSSOptions, error) {
 	switch alg {
 	case PS256:
 		return crypto.SHA256, optsPS256, nil
@@ -71,7 +71,7 @@ var (
 )
 
 type psAlg struct {
-	alg        Algorithm
+	alg        AlgorithmName
 	hash       crypto.Hash
 	publicKey  *rsa.PublicKey
 	privateKey *rsa.PrivateKey
@@ -82,7 +82,7 @@ func (h psAlg) SignSize() int {
 	return h.privateKey.Size()
 }
 
-func (h psAlg) Algorithm() Algorithm {
+func (h psAlg) AlgorithmName() AlgorithmName {
 	return h.alg
 }
 

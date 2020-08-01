@@ -27,12 +27,12 @@ func NewVerifierEdDSA(key ed25519.PublicKey) (Verifier, error) {
 }
 
 type edDSAAlg struct {
-	alg        Algorithm
+	alg        AlgorithmName
 	publicKey  ed25519.PublicKey
 	privateKey ed25519.PrivateKey
 }
 
-func (h edDSAAlg) Algorithm() Algorithm {
+func (h edDSAAlg) AlgorithmName() AlgorithmName {
 	return h.alg
 }
 

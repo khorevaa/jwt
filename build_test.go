@@ -97,7 +97,7 @@ func TestBuildMalformed(t *testing.T) {
 	)
 	f(
 		mustSigner(NewSignerHS(HS256, []byte("test-key"))),
-		badSigner.Algorithm,
+		badSigner.AlgorithmName,
 	)
 }
 
@@ -112,7 +112,7 @@ type badSigner struct{}
 func (badSigner) SignSize() int {
 	return 0
 }
-func (badSigner) Algorithm() Algorithm {
+func (badSigner) AlgorithmName() AlgorithmName {
 	return "bad"
 }
 func (badSigner) Sign(payload []byte) ([]byte, error) {

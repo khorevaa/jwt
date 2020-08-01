@@ -7,39 +7,39 @@ import (
 
 // Signer is used to sign tokens.
 type Signer interface {
-	Algorithm() Algorithm
+	AlgorithmName() AlgorithmName
 	SignSize() int
 	Sign(payload []byte) ([]byte, error)
 }
 
 // Verifier is used to verify tokens.
 type Verifier interface {
-	Algorithm() Algorithm
+	AlgorithmName() AlgorithmName
 	Verify(payload, signature []byte) error
 }
 
-// Algorithm for signing and verifying.
-type Algorithm string
+// AlgorithmName for signing and verifying.
+type AlgorithmName string
 
-func (a Algorithm) String() string { return string(a) }
+func (a AlgorithmName) String() string { return string(a) }
 
-// Algorithm names for signing and verifying.
+// AlgorithmName names for signing and verifying.
 const (
-	EdDSA Algorithm = "EdDSA"
+	EdDSA AlgorithmName = "EdDSA"
 
-	HS256 Algorithm = "HS256"
-	HS384 Algorithm = "HS384"
-	HS512 Algorithm = "HS512"
+	HS256 AlgorithmName = "HS256"
+	HS384 AlgorithmName = "HS384"
+	HS512 AlgorithmName = "HS512"
 
-	RS256 Algorithm = "RS256"
-	RS384 Algorithm = "RS384"
-	RS512 Algorithm = "RS512"
+	RS256 AlgorithmName = "RS256"
+	RS384 AlgorithmName = "RS384"
+	RS512 AlgorithmName = "RS512"
 
-	ES256 Algorithm = "ES256"
-	ES384 Algorithm = "ES384"
-	ES512 Algorithm = "ES512"
+	ES256 AlgorithmName = "ES256"
+	ES384 AlgorithmName = "ES384"
+	ES512 AlgorithmName = "ES512"
 
-	PS256 Algorithm = "PS256"
-	PS384 Algorithm = "PS384"
-	PS512 Algorithm = "PS512"
+	PS256 AlgorithmName = "PS256"
+	PS384 AlgorithmName = "PS384"
+	PS512 AlgorithmName = "PS512"
 )

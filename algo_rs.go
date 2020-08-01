@@ -7,7 +7,7 @@ import (
 )
 
 // NewSignerRS returns a new RSA-based signer.
-func NewSignerRS(alg Algorithm, key *rsa.PrivateKey) (Signer, error) {
+func NewSignerRS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -23,7 +23,7 @@ func NewSignerRS(alg Algorithm, key *rsa.PrivateKey) (Signer, error) {
 }
 
 // NewVerifierRS returns a new RSA-based verifier.
-func NewVerifierRS(alg Algorithm, key *rsa.PublicKey) (Verifier, error) {
+func NewVerifierRS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
 	if key == nil {
 		return nil, ErrInvalidKey
 	}
@@ -38,7 +38,7 @@ func NewVerifierRS(alg Algorithm, key *rsa.PublicKey) (Verifier, error) {
 	}, nil
 }
 
-func getHashRSA(alg Algorithm) (crypto.Hash, error) {
+func getHashRSA(alg AlgorithmName) (crypto.Hash, error) {
 	switch alg {
 	case RS256:
 		return crypto.SHA256, nil
@@ -52,13 +52,13 @@ func getHashRSA(alg Algorithm) (crypto.Hash, error) {
 }
 
 type rsAlg struct {
-	alg        Algorithm
+	alg        AlgorithmName
 	hash       crypto.Hash
 	publickey  *rsa.PublicKey
 	privateKey *rsa.PrivateKey
 }
 
-func (h rsAlg) Algorithm() Algorithm {
+func (h rsAlg) AlgorithmName() AlgorithmName {
 	return h.alg
 }
 

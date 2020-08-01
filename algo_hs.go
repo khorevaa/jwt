@@ -8,7 +8,7 @@ import (
 )
 
 // NewSignerHS returns a new HMAC-based signer.
-func NewSignerHS(alg Algorithm, key []byte) (Signer, error) {
+func NewSignerHS(alg AlgorithmName, key []byte) (Signer, error) {
 	if len(key) == 0 {
 		return nil, ErrInvalidKey
 	}
@@ -27,7 +27,7 @@ func NewSignerHS(alg Algorithm, key []byte) (Signer, error) {
 }
 
 // NewVerifierHS returns a new HMAC-based verifier.
-func NewVerifierHS(alg Algorithm, key []byte) (Verifier, error) {
+func NewVerifierHS(alg AlgorithmName, key []byte) (Verifier, error) {
 	if len(key) == 0 {
 		return nil, ErrInvalidKey
 	}
@@ -45,7 +45,7 @@ func NewVerifierHS(alg Algorithm, key []byte) (Verifier, error) {
 	}, nil
 }
 
-func getHashHMAC(alg Algorithm) (crypto.Hash, error) {
+func getHashHMAC(alg AlgorithmName) (crypto.Hash, error) {
 	switch alg {
 	case HS256:
 		return crypto.SHA256, nil
@@ -59,13 +59,13 @@ func getHashHMAC(alg Algorithm) (crypto.Hash, error) {
 }
 
 type hsAlg struct {
-	alg      Algorithm
+	alg      AlgorithmName
 	hash     crypto.Hash
 	key      []byte
 	hashPool *sync.Pool
 }
 
-func (h hsAlg) Algorithm() Algorithm {
+func (h hsAlg) AlgorithmName() AlgorithmName {
 	return h.alg
 }
 
