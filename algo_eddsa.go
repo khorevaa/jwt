@@ -7,7 +7,7 @@ import (
 
 // NewAlgorithmEdDSA returns a new ed25519-based algorithm.
 func NewAlgorithmEdDSA(private ed25519.PrivateKey, public ed25519.PublicKey) (Algorithm, error) {
-	if private == nil || public == nil {
+	if private == nil && public == nil {
 		return nil, errors.New("jwt: both keys cannot be nil")
 	}
 

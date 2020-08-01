@@ -10,7 +10,7 @@ import (
 
 // NewAlgorithmES returns a new ECDSA-based algorithm.
 func NewAlgorithmES(alg AlgorithmName, private *ecdsa.PrivateKey, public *ecdsa.PublicKey) (Algorithm, error) {
-	if private == nil || public == nil {
+	if private == nil && public == nil {
 		return nil, errors.New("jwt: both keys cannot be nil")
 	}
 
