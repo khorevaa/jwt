@@ -5,6 +5,13 @@ import (
 	_ "crypto/sha512" // to register a hash
 )
 
+// Algorithm is a JWT sign and verify algorithm.
+//
+type Algorithm interface {
+	Signer
+	Verifier
+}
+
 // Signer is used to sign tokens.
 type Signer interface {
 	AlgorithmName() AlgorithmName

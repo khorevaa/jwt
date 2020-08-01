@@ -4,43 +4,40 @@ import (
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/rand"
+	"errors"
 	"math/big"
 )
 
-// NewSignerES returns a new ECDSA-based signer.
-func NewSignerES(alg AlgorithmName, key *ecdsa.PrivateKey) (Signer, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
+// NewAlgorithmES returns a new ECDSA-based algorithm.
+func NewAlgorithmES(alg AlgorithmName, private *ecdsa.PrivateKey, public *ecdsa.PublicKey) (Algorithm, error) {
+	if private == nil || public == nil {
+		return nil, errors.New("jwt: both keys cannot be nil")
 	}
+
 	hash, keySize, curveBits, err := getParamsES(alg)
 	if err != nil {
 		return nil, err
 	}
-	return &esAlg{
+
+	a := &esAlg{
 		alg:        alg,
 		hash:       hash,
-		privateKey: key,
+		privateKey: private,
+		publickey:  public,
 		keySize:    keySize,
 		curveBits:  curveBits,
-	}, nil
+	}
+	return a, nil
+}
+
+// NewSignerES returns a new ECDSA-based signer.
+func NewSignerES(alg AlgorithmName, key *ecdsa.PrivateKey) (Signer, error) {
+	return NewAlgorithmES(alg, key, nil)
 }
 
 // NewVerifierES returns a new ECDSA-based verifier.
 func NewVerifierES(alg AlgorithmName, key *ecdsa.PublicKey) (Verifier, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
-	}
-	hash, keySize, curveBits, err := getParamsES(alg)
-	if err != nil {
-		return nil, err
-	}
-	return &esAlg{
-		alg:       alg,
-		hash:      hash,
-		publickey: key,
-		keySize:   keySize,
-		curveBits: curveBits,
-	}, nil
+	return NewAlgorithmES(alg, nil, key)
 }
 
 func getParamsES(alg AlgorithmName) (crypto.Hash, int, int, error) {

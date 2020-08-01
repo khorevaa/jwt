@@ -7,42 +7,36 @@ import (
 	"sync"
 )
 
-// NewSignerHS returns a new HMAC-based signer.
-func NewSignerHS(alg AlgorithmName, key []byte) (Signer, error) {
+// NewAlgorithmHS returns a new HMAC-based algorithm.
+func NewAlgorithmHS(alg AlgorithmName, key []byte) (Algorithm, error) {
 	if len(key) == 0 {
 		return nil, ErrInvalidKey
 	}
+
 	hash, err := getHashHMAC(alg)
 	if err != nil {
 		return nil, err
 	}
-	return &hsAlg{
+
+	a := &hsAlg{
 		alg:  alg,
 		hash: hash,
 		key:  key,
 		hashPool: &sync.Pool{New: func() interface{} {
 			return hmac.New(hash.New, key)
 		}},
-	}, nil
+	}
+	return a, nil
+}
+
+// NewSignerHS returns a new HMAC-based signer.
+func NewSignerHS(alg AlgorithmName, key []byte) (Signer, error) {
+	return NewAlgorithmHS(alg, key)
 }
 
 // NewVerifierHS returns a new HMAC-based verifier.
 func NewVerifierHS(alg AlgorithmName, key []byte) (Verifier, error) {
-	if len(key) == 0 {
-		return nil, ErrInvalidKey
-	}
-	hash, err := getHashHMAC(alg)
-	if err != nil {
-		return nil, err
-	}
-	return &hsAlg{
-		alg:  alg,
-		hash: hash,
-		key:  key,
-		hashPool: &sync.Pool{New: func() interface{} {
-			return hmac.New(hash.New, key)
-		}},
-	}, nil
+	return NewAlgorithmHS(alg, key)
 }
 
 func getHashHMAC(alg AlgorithmName) (crypto.Hash, error) {

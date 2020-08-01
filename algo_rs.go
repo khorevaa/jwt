@@ -4,38 +4,37 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"errors"
 )
 
-// NewSignerRS returns a new RSA-based signer.
-func NewSignerRS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
+// NewAlgorithmRS returns a new RSA-based algorithm.
+func NewAlgorithmRS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.PublicKey) (Algorithm, error) {
+	if private == nil || public == nil {
+		return nil, errors.New("jwt: both keys cannot be nil")
 	}
+
 	hash, err := getHashRSA(alg)
 	if err != nil {
 		return nil, err
 	}
-	return &rsAlg{
+
+	a := &rsAlg{
 		alg:        alg,
 		hash:       hash,
-		privateKey: key,
-	}, nil
+		privateKey: private,
+		publickey:  public,
+	}
+	return a, nil
+}
+
+// NewSignerRS returns a new RSA-based signer.
+func NewSignerRS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
+	return NewAlgorithmRS(alg, key, nil)
 }
 
 // NewVerifierRS returns a new RSA-based verifier.
 func NewVerifierRS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
-	}
-	hash, err := getHashRSA(alg)
-	if err != nil {
-		return nil, err
-	}
-	return &rsAlg{
-		alg:       alg,
-		hash:      hash,
-		publickey: key,
-	}, nil
+	return NewAlgorithmRS(alg, nil, key)
 }
 
 func getHashRSA(alg AlgorithmName) (crypto.Hash, error) {

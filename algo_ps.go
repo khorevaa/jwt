@@ -4,40 +4,38 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"errors"
 )
 
-// NewSignerPS returns a new RSA-PSS-based signer.
-func NewSignerPS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
+// NewAlgorithmPS returns a new RSA-PSS-based algorithm.
+func NewAlgorithmPS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.PublicKey) (Algorithm, error) {
+	if private == nil || public == nil {
+		return nil, errors.New("jwt: both keys cannot be nil")
 	}
+
 	hash, opts, err := getParamsPS(alg)
 	if err != nil {
 		return nil, err
 	}
-	return &psAlg{
+
+	a := &psAlg{
 		alg:        alg,
 		hash:       hash,
-		privateKey: key,
+		privateKey: private,
+		publicKey:  public,
 		opts:       opts,
-	}, nil
+	}
+	return a, nil
+}
+
+// NewSignerPS returns a new RSA-PSS-based signer.
+func NewSignerPS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
+	return NewAlgorithmPS(alg, key, nil)
 }
 
 // NewVerifierPS returns a new RSA-PSS-based signer.
 func NewVerifierPS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
-	}
-	hash, opts, err := getParamsPS(alg)
-	if err != nil {
-		return nil, err
-	}
-	return &psAlg{
-		alg:       alg,
-		hash:      hash,
-		publicKey: key,
-		opts:      opts,
-	}, nil
+	return NewAlgorithmPS(alg, nil, key)
 }
 
 func getParamsPS(alg AlgorithmName) (crypto.Hash, *rsa.PSSOptions, error) {
