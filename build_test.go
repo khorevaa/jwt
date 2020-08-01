@@ -23,7 +23,7 @@ func TestBuild(t *testing.T) {
 
 	f(
 		mustSigner(NewSignerHS(HS256, []byte("test-key-256"))),
-		&StandardClaims{
+		&RegisteredClaims{
 			ID:       "just an id",
 			Audience: Audience([]string{"audience"}),
 		},
@@ -35,7 +35,7 @@ func TestBuildHeader(t *testing.T) {
 	f := func(signer Signer, header Header, want string) {
 		t.Helper()
 
-		token, err := NewBuilder(signer).Build(&StandardClaims{})
+		token, err := NewBuilder(signer).Build(&RegisteredClaims{})
 		if err != nil {
 			t.Error(err)
 		}

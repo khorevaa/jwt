@@ -18,7 +18,7 @@ func Example_JWT() {
 
 	// 2. create q standard claims
 	// (you can create your own, see: Example_BuildUserClaims)
-	claims := &jwt.StandardClaims{
+	claims := &jwt.RegisteredClaims{
 		Audience: []string{"admin"},
 		ID:       "random-unique-string",
 	}
@@ -46,7 +46,7 @@ func Example_JWT() {
 	checkErr(err)
 
 	// 9. get standard claims
-	var newClaims jwt.StandardClaims
+	var newClaims jwt.RegisteredClaims
 	errClaims := json.Unmarshal(newToken.RawClaims(), &newClaims)
 	checkErr(errClaims)
 

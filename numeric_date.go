@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// NumericDate represents date for StandardClaims
+// NumericDate represents date for RegisteredClaims
 // See: https://tools.ietf.org/html/rfc7519#section-2
 //
 type NumericDate struct {
