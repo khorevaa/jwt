@@ -8,8 +8,10 @@ import (
 // Algorithm is a JWT sign and verify algorithm.
 //
 type Algorithm interface {
-	Signer
-	Verifier
+	AlgorithmName() AlgorithmName
+	SignSize() int
+	Sign(payload []byte) ([]byte, error)
+	Verify(payload, signature []byte) error
 }
 
 // Signer is used to sign tokens.
