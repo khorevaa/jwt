@@ -20,14 +20,14 @@ func Example_BuildSimple() {
 
 	fmt.Printf("AlgorithmName %v\n", token.Header().Algorithm)
 	fmt.Printf("Type      %v\n", token.Header().Type)
-	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
+	//fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Bytes()))
+	// Claims    {"jti":"random-unique-string","aud":"admin"}
 
 	// Output:
 	// AlgorithmName HS256
 	// Type      JWT
-	// Claims    {"jti":"random-unique-string","aud":"admin"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0
 	// Token     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0.uNaqGEggmy02lZq8FM7KoUKXhOy-zrSF7inYuzIET9o
 }
@@ -54,12 +54,12 @@ func Example_BuildUserClaims() {
 	token, err := builder.Build(claims)
 	checkErr(err)
 
-	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
+	//fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Bytes()))
+	// Claims    {"jti":"random-unique-string","aud":"admin","is_admin":true,"email":"foo@bar.baz"}
 
 	// Output:
-	// Claims    {"jti":"random-unique-string","aud":"admin","is_admin":true,"email":"foo@bar.baz"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIiwiaXNfYWRtaW4iOnRydWUsImVtYWlsIjoiZm9vQGJhci5iYXoifQ
 	// Token     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIiwiaXNfYWRtaW4iOnRydWUsImVtYWlsIjoiZm9vQGJhci5iYXoifQ.oKE62_k3bqAlKwdBJDBJq5DQ_0FvpNv6e1u6hF_ShQs
 }
@@ -78,12 +78,12 @@ func Example_DummyClaims() {
 	token, err := builder.Build(&claims)
 	checkErr(err)
 
-	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
+	//fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
 	fmt.Printf("Token     %v\n", string(token.Bytes()))
+	// Claims    {"aUdIeNcE":"@everyone","well":"well-well-well"}
 
 	// Output:
-	// Claims    {"aUdIeNcE":"@everyone","well":"well-well-well"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhVWRJZU5jRSI6IkBldmVyeW9uZSIsIndlbGwiOiJ3ZWxsLXdlbGwtd2VsbCJ9
 	// Token     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhVWRJZU5jRSI6IkBldmVyeW9uZSIsIndlbGwiOiJ3ZWxsLXdlbGwtd2VsbCJ9.vN4rxWHBX4mjG-s0tiM_9ngX_e8KOEyXyEdjsTiTvqI
 }

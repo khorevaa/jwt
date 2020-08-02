@@ -70,7 +70,7 @@ func (b *Builder) Build(claims interface{}) (*Token, error) {
 		payload:   raw[:lenH+1+lenC],
 		signature: signature,
 		header:    b.header,
-		claims:    rawClaims,
+		//claims:    rawClaims,
 	}
 	return token, nil
 }

@@ -1,7 +1,6 @@
 package jwt_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -47,8 +46,8 @@ func Example_JWT() {
 
 	// 9. get standard claims
 	var newClaims jwt.RegisteredClaims
-	errClaims := json.Unmarshal(newToken.RawClaims(), &newClaims)
-	checkErr(errClaims)
+	//errClaims := json.Unmarshal(newToken.RawClaims(), &newClaims)
+	//checkErr(errClaims)
 
 	// 10. verify claims
 	var _ bool = newClaims.IsForAudience("admin")
@@ -56,14 +55,14 @@ func Example_JWT() {
 
 	fmt.Printf("AlgorithmName %v\n", newToken.Header().Algorithm)
 	fmt.Printf("Type      %v\n", newToken.Header().Type)
-	fmt.Printf("Claims    %v\n", string(newToken.RawClaims()))
+	//fmt.Printf("Claims    %v\n", string(newToken.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(newToken.Payload()))
 	fmt.Printf("Token     %v\n", string(newToken.Bytes()))
+	// Claims    {"jti":"random-unique-string","aud":"admin"}
 
 	// Output:
 	// AlgorithmName HS256
 	// Type      JWT
-	// Claims    {"jti":"random-unique-string","aud":"admin"}
 	// Payload   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0
 	// Token     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyYW5kb20tdW5pcXVlLXN0cmluZyIsImF1ZCI6ImFkbWluIn0.uNaqGEggmy02lZq8FM7KoUKXhOy-zrSF7inYuzIET9o
 }

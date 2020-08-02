@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"bytes"
-	"encoding/json"
 )
 
 // Token represents a JWT token.
@@ -13,7 +12,7 @@ type Token struct {
 	payload   []byte
 	signature []byte
 	header    Header
-	claims    json.RawMessage
+	//claims    json.RawMessage
 }
 
 func (t *Token) String() string {
@@ -37,9 +36,9 @@ func (t *Token) RawHeader() []byte {
 }
 
 // RawClaims returns token's claims as a raw bytes.
-func (t *Token) RawClaims() []byte {
-	return t.claims
-}
+//func (t *Token) RawClaims() []byte {
+//	return t.claims
+//}
 
 // Payload returns token's payload.
 func (t *Token) Payload() []byte {

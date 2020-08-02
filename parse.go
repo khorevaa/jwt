@@ -32,7 +32,7 @@ func Parse(token []byte) (*Token, error) {
 	if err != nil {
 		return nil, ErrInvalidFormat
 	}
-	claims := buf[headerN : headerN+claimsN]
+	//claims := buf[headerN : headerN+claimsN]
 
 	signN, err := base64Decode(buf[headerN+claimsN:], token[dot2+1:])
 	if err != nil {
@@ -50,7 +50,7 @@ func Parse(token []byte) (*Token, error) {
 		payload:   token[:dot2],
 		signature: signature,
 		header:    header,
-		claims:    claims,
+		//claims:    claims,
 	}
 	return tok, nil
 }
