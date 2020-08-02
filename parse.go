@@ -9,32 +9,32 @@ import (
 var base64Decode = base64.RawURLEncoding.Decode
 
 // ParseString decodes a token.
-func ParseString(raw string) (*Token, error) {
-	return Parse([]byte(raw))
+func ParseString(token string) (*Token, error) {
+	return Parse([]byte(token))
 }
 
 // Parse decodes a token from a raw bytes.
-func Parse(raw []byte) (*Token, error) {
-	dot1 := bytes.IndexByte(raw, '.')
-	dot2 := bytes.LastIndexByte(raw, '.')
+func Parse(token []byte) (*Token, error) {
+	dot1 := bytes.IndexByte(token, '.')
+	dot2 := bytes.LastIndexByte(token, '.')
 	if dot2 <= dot1 {
 		return nil, ErrInvalidFormat
 	}
 
-	buf := make([]byte, len(raw))
+	buf := make([]byte, len(token))
 
-	headerN, err := base64Decode(buf, raw[:dot1])
+	headerN, err := base64Decode(buf, token[:dot1])
 	if err != nil {
 		return nil, ErrInvalidFormat
 	}
 
-	claimsN, err := base64Decode(buf[headerN:], raw[dot1+1:dot2])
+	claimsN, err := base64Decode(buf[headerN:], token[dot1+1:dot2])
 	if err != nil {
 		return nil, ErrInvalidFormat
 	}
 	claims := buf[headerN : headerN+claimsN]
 
-	signN, err := base64Decode(buf[headerN+claimsN:], raw[dot2+1:])
+	signN, err := base64Decode(buf[headerN+claimsN:], token[dot2+1:])
 	if err != nil {
 		return nil, ErrInvalidFormat
 	}
@@ -45,32 +45,32 @@ func Parse(raw []byte) (*Token, error) {
 		return nil, ErrInvalidFormat
 	}
 
-	token := &Token{
-		raw:       raw,
-		payload:   raw[:dot2],
+	tok := &Token{
+		raw:       token,
+		payload:   token[:dot2],
 		signature: signature,
 		header:    header,
 		claims:    claims,
 	}
-	return token, nil
+	return tok, nil
 }
 
 // ParseAndVerifyString decodes a token and verifies it's signature.
-func ParseAndVerifyString(raw string, alg Algorithm) (*Token, error) {
-	return ParseAndVerify([]byte(raw), alg)
+func ParseAndVerifyString(token string, alg Algorithm) (*Token, error) {
+	return ParseAndVerify([]byte(token), alg)
 }
 
 // ParseAndVerify decodes a token and verifies it's signature.
-func ParseAndVerify(raw []byte, alg Algorithm) (*Token, error) {
-	token, err := Parse(raw)
+func ParseAndVerify(token []byte, alg Algorithm) (*Token, error) {
+	tok, err := Parse(token)
 	if err != nil {
 		return nil, err
 	}
-	if token.Header().Algorithm != alg.AlgorithmName() {
+	if tok.Header().Algorithm != alg.AlgorithmName() {
 		return nil, ErrAlgorithmMismatch
 	}
-	if err := alg.Verify(token.Payload(), token.Signature()); err != nil {
+	if err := alg.Verify(tok.Payload(), tok.Signature()); err != nil {
 		return nil, err
 	}
-	return token, nil
+	return tok, nil
 }

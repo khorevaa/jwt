@@ -22,7 +22,7 @@ func Example_BuildSimple() {
 	fmt.Printf("Type      %v\n", token.Header().Type)
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
-	fmt.Printf("Token     %v\n", string(token.Raw()))
+	fmt.Printf("Token     %v\n", string(token.Bytes()))
 
 	// Output:
 	// AlgorithmName HS256
@@ -56,7 +56,7 @@ func Example_BuildUserClaims() {
 
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
-	fmt.Printf("Token     %v\n", string(token.Raw()))
+	fmt.Printf("Token     %v\n", string(token.Bytes()))
 
 	// Output:
 	// Claims    {"jti":"random-unique-string","aud":"admin","is_admin":true,"email":"foo@bar.baz"}
@@ -80,7 +80,7 @@ func Example_DummyClaims() {
 
 	fmt.Printf("Claims    %v\n", string(token.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(token.Payload()))
-	fmt.Printf("Token     %v\n", string(token.Raw()))
+	fmt.Printf("Token     %v\n", string(token.Bytes()))
 
 	// Output:
 	// Claims    {"aUdIeNcE":"@everyone","well":"well-well-well"}

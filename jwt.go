@@ -20,14 +20,8 @@ func (t *Token) String() string {
 	return string(t.raw)
 }
 
-// SecureString returns token without a signature (replaced with `.<signature>`).
-func (t *Token) SecureString() string {
-	dot := bytes.LastIndexByte(t.raw, '.')
-	return string(t.raw[:dot]) + `.<signature>`
-}
-
-// Raw returns token's raw bytes.
-func (t *Token) Raw() []byte {
+// Bytes returns token's raw bytes.
+func (t *Token) Bytes() []byte {
 	return t.raw
 }
 

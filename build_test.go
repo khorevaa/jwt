@@ -10,12 +10,12 @@ func TestBuild(t *testing.T) {
 	f := func(alg Algorithm, claims interface{}, want string) {
 		t.Helper()
 
-		token, err := BuildBytes(alg, claims)
+		token, err := Build(alg, claims)
 		if err != nil {
 			t.Error(err)
 		}
 
-		raw := string(token)
+		raw := string(token.Bytes())
 		if raw != want {
 			t.Errorf("want %v,\n got %v", want, raw)
 		}
@@ -85,7 +85,7 @@ func TestBuildMalformed(t *testing.T) {
 	f := func(alg Algorithm, claims interface{}) {
 		t.Helper()
 
-		_, err := BuildBytes(alg, claims)
+		_, err := Build(alg, claims)
 		if err == nil {
 			t.Error("want err, got nil")
 		}

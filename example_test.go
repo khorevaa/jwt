@@ -30,7 +30,7 @@ func Example_JWT() {
 	token, err := builder.Build(claims)
 
 	// 5. here is your token  :)
-	var _ []byte = token.Raw() // or just token.String() for string
+	var _ []byte = token.Bytes() // or just token.String() for string
 
 	// 6. parse a token (by example received from a request)
 	tokenStr := token.String()
@@ -58,7 +58,7 @@ func Example_JWT() {
 	fmt.Printf("Type      %v\n", newToken.Header().Type)
 	fmt.Printf("Claims    %v\n", string(newToken.RawClaims()))
 	fmt.Printf("Payload   %v\n", string(newToken.Payload()))
-	fmt.Printf("Token     %v\n", string(newToken.Raw()))
+	fmt.Printf("Token     %v\n", string(newToken.Bytes()))
 
 	// Output:
 	// AlgorithmName HS256
