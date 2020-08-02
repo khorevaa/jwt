@@ -62,6 +62,9 @@ func (h hsAlg) Sign(payload []byte) ([]byte, error) {
 }
 
 func (h hsAlg) Verify(payload, signature []byte) error {
+	if len(signature) != h.SignSize() {
+		return ErrInvalidSignature
+	}
 	signed, err := h.sign(payload)
 	if err != nil {
 		return err

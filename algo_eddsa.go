@@ -35,6 +35,9 @@ func (h edDSAAlg) Sign(payload []byte) ([]byte, error) {
 }
 
 func (h edDSAAlg) Verify(payload, signature []byte) error {
+	if len(signature) != ed25519.SignatureSize {
+		return ErrInvalidSignature
+	}
 	if !ed25519.Verify(h.publicKey, payload, signature) {
 		return ErrInvalidSignature
 	}
