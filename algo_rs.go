@@ -4,13 +4,12 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
-	"errors"
 )
 
 // NewAlgorithmRS returns a new RSA-based algorithm.
 func NewAlgorithmRS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.PublicKey) (Algorithm, error) {
 	if private == nil && public == nil {
-		return nil, errors.New("jwt: both keys cannot be nil")
+		return nil, ErrBothKeysAreNil
 	}
 
 	hash, err := getHashRSA(alg)

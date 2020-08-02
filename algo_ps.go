@@ -4,13 +4,12 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
-	"errors"
 )
 
 // NewAlgorithmPS returns a new RSA-PSS-based algorithm.
 func NewAlgorithmPS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.PublicKey) (Algorithm, error) {
 	if private == nil && public == nil {
-		return nil, errors.New("jwt: both keys cannot be nil")
+		return nil, ErrBothKeysAreNil
 	}
 
 	hash, opts, err := getParamsPS(alg)
