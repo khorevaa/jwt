@@ -27,16 +27,6 @@ func NewAlgorithmRS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.Publ
 	return a, nil
 }
 
-// NewSignerRS returns a new RSA-based signer.
-func NewSignerRS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
-	return NewAlgorithmRS(alg, key, nil)
-}
-
-// NewVerifierRS returns a new RSA-based verifier.
-func NewVerifierRS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
-	return NewAlgorithmRS(alg, nil, key)
-}
-
 func getHashRSA(alg AlgorithmName) (crypto.Hash, error) {
 	switch alg {
 	case RS256:

@@ -3,6 +3,7 @@ package jwt
 import (
 	"crypto"
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/rand"
 	"errors"
 	"math/big"
@@ -30,24 +31,14 @@ func NewAlgorithmES(alg AlgorithmName, private *ecdsa.PrivateKey, public *ecdsa.
 	return a, nil
 }
 
-// NewSignerES returns a new ECDSA-based signer.
-func NewSignerES(alg AlgorithmName, key *ecdsa.PrivateKey) (Signer, error) {
-	return NewAlgorithmES(alg, key, nil)
-}
-
-// NewVerifierES returns a new ECDSA-based verifier.
-func NewVerifierES(alg AlgorithmName, key *ecdsa.PublicKey) (Verifier, error) {
-	return NewAlgorithmES(alg, nil, key)
-}
-
 func getParamsES(alg AlgorithmName) (crypto.Hash, int, int, error) {
 	switch alg {
 	case ES256:
-		return crypto.SHA256, 32, 256, nil
+		return crypto.SHA256, 32, elliptic.P256().Params().BitSize, nil // BitSize = 256
 	case ES384:
-		return crypto.SHA384, 48, 384, nil
+		return crypto.SHA384, 48, elliptic.P384().Params().BitSize, nil // BitSize = 384
 	case ES512:
-		return crypto.SHA512, 66, 521, nil
+		return crypto.SHA512, 66, elliptic.P521().Params().BitSize, nil // BitSize = 521
 	default:
 		return 0, 0, 0, ErrUnsupportedAlg
 	}

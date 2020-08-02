@@ -18,16 +18,6 @@ func NewAlgorithmEdDSA(private ed25519.PrivateKey, public ed25519.PublicKey) (Al
 	return a, nil
 }
 
-// NewSignerEdDSA returns a new ed25519-based signer.
-func NewSignerEdDSA(key ed25519.PrivateKey) (Signer, error) {
-	return NewAlgorithmEdDSA(key, nil)
-}
-
-// NewVerifierEdDSA returns a new ed25519-based verifier.
-func NewVerifierEdDSA(key ed25519.PublicKey) (Verifier, error) {
-	return NewAlgorithmEdDSA(nil, key)
-}
-
 type edDSAAlg struct {
 	publicKey  ed25519.PublicKey
 	privateKey ed25519.PrivateKey

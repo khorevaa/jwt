@@ -29,16 +29,6 @@ func NewAlgorithmHS(alg AlgorithmName, key []byte) (Algorithm, error) {
 	return a, nil
 }
 
-// NewSignerHS returns a new HMAC-based signer.
-func NewSignerHS(alg AlgorithmName, key []byte) (Signer, error) {
-	return NewAlgorithmHS(alg, key)
-}
-
-// NewVerifierHS returns a new HMAC-based verifier.
-func NewVerifierHS(alg AlgorithmName, key []byte) (Verifier, error) {
-	return NewAlgorithmHS(alg, key)
-}
-
 func getHashHMAC(alg AlgorithmName) (crypto.Hash, error) {
 	switch alg {
 	case HS256:

@@ -14,19 +14,6 @@ type Algorithm interface {
 	Verify(payload, signature []byte) error
 }
 
-// Signer is used to sign tokens.
-type Signer interface {
-	AlgorithmName() AlgorithmName
-	SignSize() int
-	Sign(payload []byte) ([]byte, error)
-}
-
-// Verifier is used to verify tokens.
-type Verifier interface {
-	AlgorithmName() AlgorithmName
-	Verify(payload, signature []byte) error
-}
-
 // AlgorithmName for signing and verifying.
 type AlgorithmName string
 

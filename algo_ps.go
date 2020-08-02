@@ -28,16 +28,6 @@ func NewAlgorithmPS(alg AlgorithmName, private *rsa.PrivateKey, public *rsa.Publ
 	return a, nil
 }
 
-// NewSignerPS returns a new RSA-PSS-based signer.
-func NewSignerPS(alg AlgorithmName, key *rsa.PrivateKey) (Signer, error) {
-	return NewAlgorithmPS(alg, key, nil)
-}
-
-// NewVerifierPS returns a new RSA-PSS-based signer.
-func NewVerifierPS(alg AlgorithmName, key *rsa.PublicKey) (Verifier, error) {
-	return NewAlgorithmPS(alg, nil, key)
-}
-
 func getParamsPS(alg AlgorithmName) (crypto.Hash, *rsa.PSSOptions, error) {
 	switch alg {
 	case PS256:

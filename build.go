@@ -12,25 +12,25 @@ var (
 
 // Builder is used to create a new token.
 type Builder struct {
-	signer    Signer
+	alg       Algorithm
 	header    Header
 	headerRaw []byte
 }
 
 // BuildBytes is used to create and encode JWT with a provided claims.
-func BuildBytes(signer Signer, claims interface{}) ([]byte, error) {
+func BuildBytes(signer Algorithm, claims interface{}) ([]byte, error) {
 	return NewBuilder(signer).BuildBytes(claims)
 }
 
 // Build is used to create and encode JWT with a provided claims.
-func Build(signer Signer, claims interface{}) (*Token, error) {
+func Build(signer Algorithm, claims interface{}) (*Token, error) {
 	return NewBuilder(signer).Build(claims)
 }
 
 // NewBuilder returns new instance of Builder.
-func NewBuilder(signer Signer) *Builder {
+func NewBuilder(signer Algorithm) *Builder {
 	b := &Builder{
-		signer: signer,
+		alg: signer,
 		header: Header{
 			Algorithm: signer.AlgorithmName(),
 			Type:      "JWT",
@@ -60,7 +60,7 @@ func (b *Builder) Build(claims interface{}) (*Token, error) {
 
 	lenH := len(b.headerRaw)
 	lenC := base64EncodedLen(len(rawClaims))
-	lenS := base64EncodedLen(b.signer.SignSize())
+	lenS := base64EncodedLen(b.alg.SignSize())
 
 	raw := make([]byte, lenH+1+lenC+1+lenS)
 	idx := 0
@@ -70,7 +70,7 @@ func (b *Builder) Build(claims interface{}) (*Token, error) {
 	base64Encode(raw[idx:], rawClaims)
 	idx += lenC
 
-	signature, err := b.signer.Sign(raw[:idx])
+	signature, err := b.alg.Sign(raw[:idx])
 	if err != nil {
 		return nil, err
 	}
