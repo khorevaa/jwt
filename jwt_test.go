@@ -6,18 +6,11 @@ import (
 	"testing"
 )
 
-func mustSigner(s Signer, err error) Signer {
+func mustAlgo(a Algorithm, err error) Algorithm {
 	if err != nil {
 		panic(err)
 	}
-	return s
-}
-
-func mustVerifier(v Verifier, err error) Verifier {
-	if err != nil {
-		panic(err)
-	}
-	return v
+	return a
 }
 
 type customClaims struct {
@@ -61,7 +54,7 @@ func TestMarshalHeader(t *testing.T) {
 }
 
 func TestSecurePrint(t *testing.T) {
-	sign, _ := NewSignerHS(HS256, []byte(`test-key`))
+	sign, _ := NewAlgorithmHS(HS256, []byte(`test-key`))
 	claims := &RegisteredClaims{
 		ID:       "test-id",
 		Audience: Audience([]string{"test-user"}),

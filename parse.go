@@ -56,20 +56,20 @@ func Parse(raw []byte) (*Token, error) {
 }
 
 // ParseAndVerifyString decodes a token and verifies it's signature.
-func ParseAndVerifyString(raw string, verifier Verifier) (*Token, error) {
-	return ParseAndVerify([]byte(raw), verifier)
+func ParseAndVerifyString(raw string, alg Algorithm) (*Token, error) {
+	return ParseAndVerify([]byte(raw), alg)
 }
 
 // ParseAndVerify decodes a token and verifies it's signature.
-func ParseAndVerify(raw []byte, verifier Verifier) (*Token, error) {
+func ParseAndVerify(raw []byte, alg Algorithm) (*Token, error) {
 	token, err := Parse(raw)
 	if err != nil {
 		return nil, err
 	}
-	if token.Header().Algorithm != verifier.AlgorithmName() {
+	if token.Header().Algorithm != alg.AlgorithmName() {
 		return nil, ErrAlgorithmMismatch
 	}
-	if err := verifier.Verify(token.Payload(), token.Signature()); err != nil {
+	if err := alg.Verify(token.Payload(), token.Signature()); err != nil {
 		return nil, err
 	}
 	return token, nil

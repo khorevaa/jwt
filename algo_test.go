@@ -3,111 +3,86 @@ package jwt
 import "testing"
 
 func TestSignerAlg(t *testing.T) {
-	f := func(s Signer, want AlgorithmName) {
+	f := func(alg Algorithm, want AlgorithmName) {
 		t.Helper()
-		if alg := s.AlgorithmName(); alg != want {
+
+		if alg := alg.AlgorithmName(); alg != want {
 			t.Errorf("got %#v, want %#v", alg, want)
 		}
 	}
 
 	hmacKey := []byte("key")
-	f(mustSigner(NewSignerHS(HS256, hmacKey)), HS256)
-	f(mustSigner(NewSignerHS(HS384, hmacKey)), HS384)
-	f(mustSigner(NewSignerHS(HS512, hmacKey)), HS512)
+	f(mustAlgo(NewAlgorithmHS(HS256, hmacKey)), HS256)
+	f(mustAlgo(NewAlgorithmHS(HS384, hmacKey)), HS384)
+	f(mustAlgo(NewAlgorithmHS(HS512, hmacKey)), HS512)
 
 	rsaPriv := rsaPrivateKey1
-	f(mustSigner(NewSignerRS(RS256, rsaPriv)), RS256)
-	f(mustSigner(NewSignerRS(RS384, rsaPriv)), RS384)
-	f(mustSigner(NewSignerRS(RS512, rsaPriv)), RS512)
+	f(mustAlgo(NewAlgorithmRS(RS256, rsaPriv, nil)), RS256)
+	f(mustAlgo(NewAlgorithmRS(RS384, rsaPriv, nil)), RS384)
+	f(mustAlgo(NewAlgorithmRS(RS512, rsaPriv, nil)), RS512)
 
-	f(mustSigner(NewSignerPS(PS256, rsaPriv)), PS256)
-	f(mustSigner(NewSignerPS(PS384, rsaPriv)), PS384)
-	f(mustSigner(NewSignerPS(PS512, rsaPriv)), PS512)
+	f(mustAlgo(NewAlgorithmPS(PS256, rsaPriv, nil)), PS256)
+	f(mustAlgo(NewAlgorithmPS(PS384, rsaPriv, nil)), PS384)
+	f(mustAlgo(NewAlgorithmPS(PS512, rsaPriv, nil)), PS512)
 
 	ecdsaPriv := ecdsaPrivateKey256
-	f(mustSigner(NewSignerES(ES256, ecdsaPriv)), ES256)
-	f(mustSigner(NewSignerES(ES384, ecdsaPriv)), ES384)
-	f(mustSigner(NewSignerES(ES512, ecdsaPriv)), ES512)
+	f(mustAlgo(NewAlgorithmES(ES256, ecdsaPriv, nil)), ES256)
+	f(mustAlgo(NewAlgorithmES(ES384, ecdsaPriv, nil)), ES384)
+	f(mustAlgo(NewAlgorithmES(ES512, ecdsaPriv, nil)), ES512)
 }
 
 func TestVerifierAlg(t *testing.T) {
-	f := func(v Verifier, want AlgorithmName) {
+	f := func(alg Algorithm, want AlgorithmName) {
 		t.Helper()
-		if alg := v.AlgorithmName(); alg != want {
+		if alg := alg.AlgorithmName(); alg != want {
 			t.Errorf("got %#v, want %#v", alg, want)
 		}
 	}
 
 	hmacKey := []byte("key")
-	f(mustVerifier(NewVerifierHS(HS256, hmacKey)), HS256)
-	f(mustVerifier(NewVerifierHS(HS384, hmacKey)), HS384)
-	f(mustVerifier(NewVerifierHS(HS512, hmacKey)), HS512)
+	f(mustAlgo(NewAlgorithmHS(HS256, hmacKey)), HS256)
+	f(mustAlgo(NewAlgorithmHS(HS384, hmacKey)), HS384)
+	f(mustAlgo(NewAlgorithmHS(HS512, hmacKey)), HS512)
 
 	rsaPub := rsaPublicKey1
-	f(mustVerifier(NewVerifierRS(RS256, rsaPub)), RS256)
-	f(mustVerifier(NewVerifierRS(RS384, rsaPub)), RS384)
-	f(mustVerifier(NewVerifierRS(RS512, rsaPub)), RS512)
+	f(mustAlgo(NewAlgorithmRS(RS256, nil, rsaPub)), RS256)
+	f(mustAlgo(NewAlgorithmRS(RS384, nil, rsaPub)), RS384)
+	f(mustAlgo(NewAlgorithmRS(RS512, nil, rsaPub)), RS512)
 
-	f(mustVerifier(NewVerifierPS(PS256, rsaPub)), PS256)
-	f(mustVerifier(NewVerifierPS(PS384, rsaPub)), PS384)
-	f(mustVerifier(NewVerifierPS(PS512, rsaPub)), PS512)
+	f(mustAlgo(NewAlgorithmPS(PS256, nil, rsaPub)), PS256)
+	f(mustAlgo(NewAlgorithmPS(PS384, nil, rsaPub)), PS384)
+	f(mustAlgo(NewAlgorithmPS(PS512, nil, rsaPub)), PS512)
 
 	ecdsaPub := ecdsaPublicKey256
-	f(mustVerifier(NewVerifierES(ES256, ecdsaPub)), ES256)
-	f(mustVerifier(NewVerifierES(ES384, ecdsaPub)), ES384)
-	f(mustVerifier(NewVerifierES(ES512, ecdsaPub)), ES512)
+	f(mustAlgo(NewAlgorithmES(ES256, nil, ecdsaPub)), ES256)
+	f(mustAlgo(NewAlgorithmES(ES384, nil, ecdsaPub)), ES384)
+	f(mustAlgo(NewAlgorithmES(ES512, nil, ecdsaPub)), ES512)
 }
 
-func TestSignerErrOnNilKey(t *testing.T) {
-	f := func(_ Signer, err error) {
+func TestAlgorithmErrOnNilKey(t *testing.T) {
+	f := func(_ Algorithm, err error) {
 		t.Helper()
+
 		if err == nil {
 			t.Error("should have an error")
 		}
 	}
 
-	f(NewSignerEdDSA(nil))
+	f(NewAlgorithmEdDSA(nil, nil))
 
-	f(NewSignerHS(HS256, nil))
-	f(NewSignerHS(HS384, nil))
-	f(NewSignerHS(HS512, nil))
+	f(NewAlgorithmHS(HS256, nil))
+	f(NewAlgorithmHS(HS384, nil))
+	f(NewAlgorithmHS(HS512, nil))
 
-	f(NewSignerRS(RS256, nil))
-	f(NewSignerRS(RS384, nil))
-	f(NewSignerRS(RS512, nil))
+	f(NewAlgorithmRS(RS256, nil, nil))
+	f(NewAlgorithmRS(RS384, nil, nil))
+	f(NewAlgorithmRS(RS512, nil, nil))
 
-	f(NewSignerES(ES256, nil))
-	f(NewSignerES(ES384, nil))
-	f(NewSignerES(ES512, nil))
+	f(NewAlgorithmES(ES256, nil, nil))
+	f(NewAlgorithmES(ES384, nil, nil))
+	f(NewAlgorithmES(ES512, nil, nil))
 
-	f(NewSignerPS(PS256, nil))
-	f(NewSignerPS(PS384, nil))
-	f(NewSignerPS(PS512, nil))
-}
-
-func TestVerifierErrOnNilKey(t *testing.T) {
-	f := func(_ Verifier, err error) {
-		t.Helper()
-		if err == nil {
-			t.Error("should have an error")
-		}
-	}
-
-	f(NewVerifierEdDSA(nil))
-
-	f(NewVerifierHS(HS256, nil))
-	f(NewVerifierHS(HS384, nil))
-	f(NewVerifierHS(HS512, nil))
-
-	f(NewVerifierRS(RS256, nil))
-	f(NewVerifierRS(RS384, nil))
-	f(NewVerifierRS(RS512, nil))
-
-	f(NewVerifierES(ES256, nil))
-	f(NewVerifierES(ES384, nil))
-	f(NewVerifierES(ES512, nil))
-
-	f(NewVerifierPS(PS256, nil))
-	f(NewVerifierPS(PS384, nil))
-	f(NewVerifierPS(PS512, nil))
+	f(NewAlgorithmPS(PS256, nil, nil))
+	f(NewAlgorithmPS(PS384, nil, nil))
+	f(NewAlgorithmPS(PS512, nil, nil))
 }

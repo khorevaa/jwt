@@ -18,11 +18,11 @@ func BenchmarkAlgEDSA(b *testing.B) {
 	if keyErr != nil {
 		b.Fatal(keyErr)
 	}
-	signer, signerErr := jwt.NewSignerEdDSA(privKey)
+	signer, signerErr := jwt.NewAlgorithmEdDSA(privKey, nil)
 	if signerErr != nil {
 		b.Fatal(signerErr)
 	}
-	verifier, verifierErr := jwt.NewVerifierEdDSA(pubKey)
+	verifier, verifierErr := jwt.NewAlgorithmEdDSA(nil, pubKey)
 	if verifierErr != nil {
 		b.Fatal(verifierErr)
 	}
@@ -46,11 +46,11 @@ func BenchmarkAlgES(b *testing.B) {
 		if keyErr != nil {
 			b.Fatal(keyErr)
 		}
-		signer, signerErr := jwt.NewSignerES(algo, key)
+		signer, signerErr := jwt.NewAlgorithmES(algo, key, nil)
 		if signerErr != nil {
 			b.Fatal(signerErr)
 		}
-		verifier, verifierErr := jwt.NewVerifierES(algo, &key.PublicKey)
+		verifier, verifierErr := jwt.NewAlgorithmES(algo, nil, &key.PublicKey)
 		if verifierErr != nil {
 			b.Fatal(verifierErr)
 		}
@@ -71,11 +71,11 @@ func BenchmarkAlgPS(b *testing.B) {
 		if keyErr != nil {
 			b.Fatal(keyErr)
 		}
-		signer, signerErr := jwt.NewSignerPS(algo, key)
+		signer, signerErr := jwt.NewAlgorithmPS(algo, key, nil)
 		if signerErr != nil {
 			b.Fatal(signerErr)
 		}
-		verifier, verifierErr := jwt.NewVerifierPS(algo, &key.PublicKey)
+		verifier, verifierErr := jwt.NewAlgorithmPS(algo, nil, &key.PublicKey)
 		if verifierErr != nil {
 			b.Fatal(verifierErr)
 		}
@@ -96,11 +96,11 @@ func BenchmarkAlgRS(b *testing.B) {
 		if keyErr != nil {
 			b.Fatal(keyErr)
 		}
-		signer, signerErr := jwt.NewSignerRS(algo, key)
+		signer, signerErr := jwt.NewAlgorithmRS(algo, key, nil)
 		if signerErr != nil {
 			b.Fatal(signerErr)
 		}
-		verifier, verifierErr := jwt.NewVerifierRS(algo, &key.PublicKey)
+		verifier, verifierErr := jwt.NewAlgorithmRS(algo, nil, &key.PublicKey)
 		if verifierErr != nil {
 			b.Fatal(verifierErr)
 		}
@@ -118,11 +118,11 @@ func BenchmarkAlgHS(b *testing.B) {
 	key := []byte("12345")
 	hsAlgos := []jwt.AlgorithmName{jwt.HS256, jwt.HS384, jwt.HS512}
 	for _, algo := range hsAlgos {
-		signer, signerErr := jwt.NewSignerHS(algo, key)
+		signer, signerErr := jwt.NewAlgorithmHS(algo, key)
 		if signerErr != nil {
 			b.Fatal(signerErr)
 		}
-		verifier, verifierErr := jwt.NewVerifierHS(algo, key)
+		verifier, verifierErr := jwt.NewAlgorithmHS(algo, key)
 		if verifierErr != nil {
 			b.Fatal(verifierErr)
 		}
@@ -157,7 +157,7 @@ func runSignerBench(b *testing.B, builder *jwt.Builder) {
 	}
 }
 
-func runVerifyBench(b *testing.B, builder *jwt.Builder, verifier jwt.Verifier) {
+func runVerifyBench(b *testing.B, builder *jwt.Builder, alg jwt.Algorithm) {
 	tokensCount := 32
 	tokens := make([]*jwt.Token, 0, tokensCount)
 	for i := 0; i < tokensCount; i++ {
@@ -176,7 +176,7 @@ func runVerifyBench(b *testing.B, builder *jwt.Builder, verifier jwt.Verifier) {
 	sink := uintptr(0)
 	for i := 0; i < b.N/tokensCount; i++ {
 		for _, token := range tokens {
-			verificationErr := verifier.Verify(token.Payload(), token.Signature())
+			verificationErr := alg.Verify(token.Payload(), token.Signature())
 			if verificationErr != nil {
 				b.Fatal(verificationErr)
 			}

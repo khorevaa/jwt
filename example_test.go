@@ -11,9 +11,9 @@ import (
 func Example_JWT() {
 	// 1. create a signer & a verifier
 	key := []byte(`secret`)
-	signer, err := jwt.NewSignerHS(jwt.HS256, key)
+	signer, err := jwt.NewAlgorithmHS(jwt.HS256, key)
 	checkErr(err)
-	verifier, err := jwt.NewVerifierHS(jwt.HS256, key)
+	verifier, err := jwt.NewAlgorithmHS(jwt.HS256, key)
 	checkErr(err)
 
 	// 2. create q standard claims

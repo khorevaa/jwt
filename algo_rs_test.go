@@ -45,51 +45,45 @@ func init() {
 }
 
 func TestRSA(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(alg Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		tokenBuilder := NewBuilder(alg)
 		token, _ := tokenBuilder.Build(claims)
 
-		err := verifier.Verify(token.Payload(), token.Signature())
+		err := alg.Verify(token.Payload(), token.Signature())
 		if err != nil {
 			t.Errorf("want no err, got: %#v", err)
 		}
 	}
 
 	f(
-		mustSigner(NewSignerRS(RS256, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS256, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS256, rsaPrivateKey1, rsaPublicKey1)),
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerRS(RS384, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS384, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS384, rsaPrivateKey1, rsaPublicKey1)),
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerRS(RS512, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS512, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS512, rsaPrivateKey1, rsaPublicKey1)),
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerRS(RS256, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS256, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS256, rsaPrivateKey1, rsaPublicKey1)),
 		&customClaims{
 			TestField: "foo",
 		},
 	)
 	f(
-		mustSigner(NewSignerRS(RS384, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS384, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS384, rsaPrivateKey1, rsaPublicKey1)),
 		&customClaims{
 			TestField: "bar",
 		},
 	)
 	f(
-		mustSigner(NewSignerRS(RS512, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS512, rsaPublicKey1)),
+		mustAlgo(NewAlgorithmRS(RS512, rsaPrivateKey1, rsaPublicKey1)),
 		&customClaims{
 			TestField: "baz",
 		},
@@ -97,50 +91,59 @@ func TestRSA(t *testing.T) {
 }
 
 func TestRSA_InvalidSignature(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(fn func(*rsa.PrivateKey, *rsa.PublicKey) Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		alg1 := fn(rsaPrivateKey1, nil)
+		alg2 := fn(nil, rsaPublicKey2)
+
+		tokenBuilder := NewBuilder(alg1)
 		token, _ := tokenBuilder.Build(claims)
 
-		err := verifier.Verify(token.Payload(), token.Signature())
+		err := alg2.Verify(token.Payload(), token.Signature())
 		if err == nil {
 			t.Errorf("want %v, got nil", ErrInvalidSignature)
 		}
 	}
 	f(
-		mustSigner(NewSignerRS(RS256, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS256, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS256, priv, pub))
+		},
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerRS(RS384, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS384, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS384, priv, pub))
+		},
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerRS(RS512, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS512, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS512, priv, pub))
+		},
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerRS(RS256, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS256, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS256, priv, pub))
+		},
 		&customClaims{
 			TestField: "foo",
 		},
 	)
 	f(
-		mustSigner(NewSignerRS(RS384, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS384, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS384, priv, pub))
+		},
 		&customClaims{
 			TestField: "bar",
 		},
 	)
 	f(
-		mustSigner(NewSignerRS(RS512, rsaPrivateKey1)),
-		mustVerifier(NewVerifierRS(RS512, rsaPublicKey2)),
+		func(priv *rsa.PrivateKey, pub *rsa.PublicKey) Algorithm {
+			return mustAlgo(NewAlgorithmRS(RS512, priv, pub))
+		},
 		&customClaims{
 			TestField: "baz",
 		},

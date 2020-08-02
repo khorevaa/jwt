@@ -5,53 +5,47 @@ import (
 )
 
 func TestHMAC(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(alg Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		tokenBuilder := NewBuilder(alg)
 		token, err := tokenBuilder.Build(claims)
 		if err != nil {
 			t.Errorf("want nil, got %#v", err)
 		}
 
-		err = verifier.Verify(token.Payload(), token.Signature())
+		err = alg.Verify(token.Payload(), token.Signature())
 		if err != nil {
 			t.Errorf("want no err, got: %#v", err)
 		}
 	}
 	f(
-		mustSigner(NewSignerHS(HS256, []byte("key1"))),
-		mustVerifier(NewVerifierHS(HS256, []byte("key1"))),
+		mustAlgo(NewAlgorithmHS(HS256, []byte("key1"))),
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerHS(HS384, []byte("key2"))),
-		mustVerifier(NewVerifierHS(HS384, []byte("key2"))),
+		mustAlgo(NewAlgorithmHS(HS384, []byte("key2"))),
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerHS(HS512, []byte("key3"))),
-		mustVerifier(NewVerifierHS(HS512, []byte("key3"))),
+		mustAlgo(NewAlgorithmHS(HS512, []byte("key3"))),
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerHS(HS256, []byte("key1"))),
-		mustVerifier(NewVerifierHS(HS256, []byte("key1"))),
+		mustAlgo(NewAlgorithmHS(HS256, []byte("key1"))),
 		&customClaims{
 			TestField: "foo",
 		},
 	)
 	f(
-		mustSigner(NewSignerHS(HS384, []byte("key2"))),
-		mustVerifier(NewVerifierHS(HS384, []byte("key2"))),
+		mustAlgo(NewAlgorithmHS(HS384, []byte("key2"))),
 		&customClaims{
 			TestField: "bar",
 		},
 	)
 	f(
-		mustSigner(NewSignerHS(HS512, []byte("key3"))),
-		mustVerifier(NewVerifierHS(HS512, []byte("key3"))),
+		mustAlgo(NewAlgorithmHS(HS512, []byte("key3"))),
 		&customClaims{
 			TestField: "baz",
 		},
@@ -59,53 +53,63 @@ func TestHMAC(t *testing.T) {
 }
 
 func TestHMAC_InvalidSignature(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(fn func([]byte) Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		key1, key2 := []byte("key"), []byte("another-key")
+		alg1 := fn(key1)
+		alg2 := fn(key2)
+
+		tokenBuilder := NewBuilder(alg1)
 		token, err := tokenBuilder.Build(claims)
 		if err != nil {
 			t.Errorf("want nil, got %#v", err)
 		}
 
-		err = verifier.Verify(token.Payload(), token.Signature())
+		err = alg2.Verify(token.Payload(), token.Signature())
 		if err == nil {
 			t.Errorf("want %#v, got nil", ErrInvalidSignature)
 		}
 	}
 	f(
-		mustSigner(NewSignerHS(HS256, []byte("key1"))),
-		mustVerifier(NewVerifierHS(HS256, []byte("1key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS256, key))
+		},
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerHS(HS384, []byte("key2"))),
-		mustVerifier(NewVerifierHS(HS384, []byte("2key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS384, key))
+		},
 		&RegisteredClaims{},
 	)
 	f(
-		mustSigner(NewSignerHS(HS512, []byte("key3"))),
-		mustVerifier(NewVerifierHS(HS512, []byte("3key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS512, key))
+		},
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerHS(HS256, []byte("key1"))),
-		mustVerifier(NewVerifierHS(HS256, []byte("1key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS256, key))
+		},
 		&customClaims{
 			TestField: "foo",
 		},
 	)
 	f(
-		mustSigner(NewSignerHS(HS384, []byte("key2"))),
-		mustVerifier(NewVerifierHS(HS384, []byte("2key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS384, key))
+		},
 		&customClaims{
 			TestField: "bar",
 		},
 	)
 	f(
-		mustSigner(NewSignerHS(HS512, []byte("key3"))),
-		mustVerifier(NewVerifierHS(HS512, []byte("3key"))),
+		func(key []byte) Algorithm {
+			return mustAlgo(NewAlgorithmHS(HS512, key))
+		},
 		&customClaims{
 			TestField: "baz",
 		},

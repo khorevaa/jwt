@@ -8,7 +8,7 @@ import (
 
 func Example_BuildSimple() {
 	key := []byte(`secret`)
-	signer, _ := jwt.NewSignerHS(jwt.HS256, key)
+	signer, _ := jwt.NewAlgorithmHS(jwt.HS256, key)
 	builder := jwt.NewBuilder(signer)
 
 	claims := &jwt.RegisteredClaims{
@@ -40,7 +40,7 @@ type userClaims struct {
 
 func Example_BuildUserClaims() {
 	key := []byte(`secret`)
-	signer, _ := jwt.NewSignerHS(jwt.HS256, key)
+	signer, _ := jwt.NewAlgorithmHS(jwt.HS256, key)
 	builder := jwt.NewBuilder(signer)
 
 	claims := &userClaims{
@@ -68,7 +68,7 @@ type dummyClaims map[string]interface{}
 
 func Example_DummyClaims() {
 	key := []byte(`secret`)
-	signer, _ := jwt.NewSignerHS(jwt.HS256, key)
+	signer, _ := jwt.NewAlgorithmHS(jwt.HS256, key)
 	builder := jwt.NewBuilder(signer)
 
 	claims := dummyClaims(map[string]interface{}{

@@ -39,30 +39,28 @@ var ed25519Public = ed25519.PublicKey([]byte{
 })
 
 func TestEdDSA(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(alg Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		tokenBuilder := NewBuilder(alg)
 		token, err := tokenBuilder.Build(claims)
 		if err != nil {
 			t.Errorf("want nil, got %#v", err)
 		}
 
-		err = verifier.Verify(token.Payload(), token.Signature())
+		err = alg.Verify(token.Payload(), token.Signature())
 		if err != nil {
 			t.Errorf("want no err, got: %#v", err)
 		}
 	}
 
 	f(
-		mustSigner(NewSignerEdDSA(ed25519Private)),
-		mustVerifier(NewVerifierEdDSA(ed25519Public)),
+		mustAlgo(NewAlgorithmEdDSA(ed25519Private, ed25519Public)),
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerEdDSA(ed25519Private)),
-		mustVerifier(NewVerifierEdDSA(ed25519Public)),
+		mustAlgo(NewAlgorithmEdDSA(ed25519Private, ed25519Public)),
 		&customClaims{
 			TestField: "foo",
 		},
@@ -70,30 +68,28 @@ func TestEdDSA(t *testing.T) {
 }
 
 func TestEdDSA_InvalidSignature(t *testing.T) {
-	f := func(signer Signer, verifier Verifier, claims interface{}) {
+	f := func(alg Algorithm, claims interface{}) {
 		t.Helper()
 
-		tokenBuilder := NewBuilder(signer)
+		tokenBuilder := NewBuilder(alg)
 		token, err := tokenBuilder.Build(claims)
 		if err != nil {
 			t.Errorf("want nil, got %#v", err)
 		}
 
-		err = verifier.Verify(token.Payload(), token.Signature())
+		err = alg.Verify(token.Payload(), token.Signature())
 		if err == nil {
 			t.Errorf("want %#v, got nil", ErrInvalidSignature)
 		}
 	}
 
 	f(
-		mustSigner(NewSignerEdDSA(ed25519Private2)),
-		mustVerifier(NewVerifierEdDSA(ed25519Public)),
+		mustAlgo(NewAlgorithmEdDSA(ed25519Private2, ed25519Public)),
 		&RegisteredClaims{},
 	)
 
 	f(
-		mustSigner(NewSignerEdDSA(ed25519Private2)),
-		mustVerifier(NewVerifierEdDSA(ed25519Public)),
+		mustAlgo(NewAlgorithmEdDSA(ed25519Private2, ed25519Public)),
 		&customClaims{
 			TestField: "foo",
 		},
