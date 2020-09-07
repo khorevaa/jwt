@@ -1,0 +1,4 @@
+github.com/Quasilyte/go-benchrun v0.0.0-20191124183416-1af3cab44a02 h1:Vu8Iww1aEuFR69m0+BphWywDEjTZaTlDH+CHX8vdvHY=
+github.com/Quasilyte/go-benchrun v0.0.0-20191124183416-1af3cab44a02/go.mod h1:NLgKaUxUCq0jEJAl90GEX/Zji/1q2LWAXzFfeE+eerc=
+github.com/pascaldekloe/jwt v1.9.0 h1:zOjU2IgIe36JE/xTsGIDCRZzDN8trpyWhdfOZHg/y1o=
+github.com/pascaldekloe/jwt v1.9.0/go.mod h1:TKhllgThT7TOP5rGr2zMLKEDZRAgJfBbtKyVeRsNB9A=
